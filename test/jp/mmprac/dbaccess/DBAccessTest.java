@@ -39,23 +39,52 @@ public class DBAccessTest{
     public void tearDown() {
     }
 
+    /***
+     * 初期化テスト
+     */
     @Test
     public void testInit() {
+        // データベースアクセスオブジェクト生成
         DBAccess dbAccess = new DBAccess("java_prac", "masaki", "cola3101");
+        // クラスを取得
         Class c = dbAccess.getClass();
+        
+        // コネクションを取得しているか？
         try {
+            // dbAccessクラスの dbConnection フィールドを取得
             Field fld = c.getDeclaredField("dbConnection");
+            // 取得したフィールドへのアクセスを許可
             fld.setAccessible(true);
+            // dbAccess オブジェクトの dbConnection フィールドが Null ではないことをテスト
             assertNotNull(fld.get(dbAccess));
-        } catch (NoSuchFieldException ex) {
+        } 
+        // フィールドが見つからない場合の例外処理
+        catch (NoSuchFieldException ex) {
             Logger.getLogger(DBAccessTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } 
+        // セキュリティ違反に伴う例外処理
+        catch (SecurityException ex) {
             Logger.getLogger(DBAccessTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
+        } 
+        // dbAccess の dbConnection フィールドにアクセス出来ない場合の例外処理
+        catch (IllegalArgumentException ex) {
             Logger.getLogger(DBAccessTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } 
+        // Field オブジェクト(fld)の get(object obj) メソッドに、不正な引数を指定した場合の例外処理
+        catch (IllegalAccessException ex) {
             Logger.getLogger(DBAccessTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+    }
+    
+    @Test
+    public void testExecuteSelectSQL() {
+        // データベースアクセスオブジェクト生成
+        DBAccess dbAccess = new DBAccess("java_prac", "masaki", "cola3101");
+        // SELECT 文
+        String selectSQL = "select * from address;";
+        // SELECT 文を実行して、結果が返ってくること確認
+        assertNotNull(dbAccess.executeSelectSQL(selectSQL));
         
     }
 }
